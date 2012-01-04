@@ -3,8 +3,8 @@
 // Author      : Erik Reed
 // Version     : 
 // Description : Implementation of an optimized, multithreaded, 
-//				 single and multi-layer perceptron library in C++. 
-//				 Fast neural network.
+//               single and multi-layer perceptron library in C++. 
+//               Fast neural network.
 //============================================================================
 
 #include <iostream>
@@ -45,7 +45,7 @@ void SLP(const matrix<double> &in, const matrix<double> &out) {
 
 	// num neurons by num weights (+1 for input bias)
 	matrix<double> weights(numInputs,numInputs+1);
-
+    
 	
 }
 
@@ -53,7 +53,7 @@ void tests() {
 	matrix<double> test1(4,2);
 	matrix<double> test1out(4,1);
 
-	// AND input
+	// OR input
 	test1.set(0,0,0);
 	test1.set(0,1,0);
 	test1.set(1,0,1);
@@ -61,7 +61,7 @@ void tests() {
 	test1.set(2,0,0);
 	test1.set(2,1,1);
 	test1.set(3,0,1);
-	test1.set(4,1,1);
+	test1.set(3,1,1);
 
 	test1out.set(0,0,0);
 	test1out.set(1,0,1);
