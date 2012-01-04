@@ -6,8 +6,8 @@ all: opt-mlp
 
 opt-mlp: main.o
 	$(CC) -o $@ $^ $(LDFLAGS)
-# headers below
-opt-mlp.o: main.cpp 
+
+opt-mlp.o: main.cpp OptMLP.hpp
 	$(CC) -c $(CFLAGS) $<
 
 .PHONY: clean run memcheck
