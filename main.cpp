@@ -12,7 +12,7 @@
 using namespace std;
 
 // single layer perceptron with threshold activation function
-void SLP(matrix<double> &in, matrix<double> &out) {
+void SLP(Matrix<double> &in, Matrix<double> &out) {
 	size_t numInputs = in.cols; // length of input vector
 	size_t numVectors = in.rows; // i.e. numTargets
 	size_t numOutputs = out.cols; // i.e. length of target vector
@@ -21,8 +21,8 @@ void SLP(matrix<double> &in, matrix<double> &out) {
 		throw "number of test cases different between in/out...";
 
 	// num neurons by num weights (+1 for input bias)
-	matrix<double> weights(numOutputs,numInputs+1);
-	weights.randomize();
+	Matrix<double> weights(numOutputs,numInputs+1);
+	weights.randomize(20);
 
 	char *activation = new char[numOutputs];
 	for (size_t iter=0; iter<MAX_ITERATIONS; iter++) {
@@ -45,17 +45,19 @@ void SLP(matrix<double> &in, matrix<double> &out) {
 					weights.set(j,k,newWeight);
 				}
 			}
-			cout << "Iteration: " << iter << endl;
-			if (diff==0) //converged
-				break;
+
 		}
+		cout << "Iteration: " << iter << "\tdiff: " << diff << endl;
+		cout << weights << endl;
+		if (diff==0) //converged
+			break;
 	}
 	delete[] activation;
 }
 
 void tests() {
-	matrix<double> test1(4,2);
-	matrix<double> test1out(4,1);
+	Matrix<double> test1(4,2);
+	Matrix<double> test1out(4,1);
 
 	// OR input
 	// TODO: more optimal setting

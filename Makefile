@@ -10,6 +10,9 @@ opt-mlp: main.o
 opt-mlp.o: main.cpp OptMLP.hpp
 	$(CC) -c $(CFLAGS) $<
 
+.hpp.o:
+	$(CC) $(CFLAGS) -c $<
+
 .PHONY: clean run memcheck
 run: all
 	./opt-mlp
