@@ -1,9 +1,10 @@
-/*
- * OptMLP.hpp
- *
- *  Created on: Jan 4, 2012
- *      Author: Erik Reed
- */
+//============================================================================
+// Name        : Opt-MLP-lib
+// Author      : Erik Reed
+// Description : Implementation of an optimized, multithreaded,
+//               single and multi-layer perceptron library in C++.
+//               Fast neural network.
+//============================================================================
 
 #ifndef OPTMLP_HPP_
 #define OPTMLP_HPP_
@@ -35,13 +36,33 @@ public:
             dat[i] = m.dat[i];
     }
 
-    inline
+    void printRow(size_t row) {
+        T* rowData = getRow(row);
+        for (size_t i = 0; i < rows; i++)
+            std::cout << rowData[i] << " ";
+        std::cout << std::endl;
+    }
+
+    T* getRow(size_t row) {
+        return &dat[row * rows];
+    }
+
     void set(const size_t row, const size_t col, const T &val) {
         dat[cols * row + col] = val;
     }
 
-    inline T get(const size_t row, const size_t col) {
+    T& get(const size_t row, const size_t col) {
         return dat[cols * row + col];
+    }
+
+    void randomize_rows() {
+        for (size_t i = 0; i < rows; i++) {
+            size_t row = (rand() / (double) RAND_MAX) * rows;
+            if (i != row) {
+                for (size_t j = 0; j < cols; j++)
+                    std::swap(get(i, j), get(row, j));
+            }
+        }
     }
 
     void randomize() {
@@ -51,7 +72,7 @@ public:
     void randomize(double normalize) {
         srand(time(NULL));
         for (size_t i = 0; i < rows * cols; i++) {
-            dat[i] = (rand() / RAND_MAX - .5) * 2 / normalize;
+            dat[i] = (rand() / (double) RAND_MAX - .5) * 2.0 / normalize;
         }
     }
 

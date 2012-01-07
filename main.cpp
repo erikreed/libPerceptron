@@ -1,61 +1,17 @@
 //============================================================================
-// Name        : MLP.cpp
+// Name        : Opt-MLP-lib
 // Author      : Erik Reed
-// Version     : 
 // Description : Implementation of an optimized, multithreaded, 
 //               single and multi-layer perceptron library in C++. 
 //               Fast neural network.
 //============================================================================
 
 #include "OptMLP.hpp"
+#include "NeuralNetwork.hpp"
+#include "Perceptron.cpp"
 
 using namespace std;
 
-// single layer perceptron with threshold activation function
-void SLP(Matrix<double> &in, Matrix<double> &out) {
-    size_t numInputs = in.cols; // length of input vector
-    size_t numVectors = in.rows; // i.e. numTargets
-    size_t numOutputs = out.cols; // i.e. length of target vector
-
-    if (in.rows != out.rows)
-        throw "number of test cases different between in/out...";
-
-    // num neurons by num weights (+1 for input bias)
-    Matrix<double> weights(numOutputs, numInputs + 1);
-    weights.randomize(20);
-
-    char *activation = new char[numOutputs];
-    for (size_t iter = 0; iter < MAX_ITERATIONS; iter++) {
-        double diff = 0;
-        for (size_t i = 0; i < numVectors; i++) {
-            // compute activations
-            for (size_t j = 0; j < numOutputs; j++) {
-                double sum = 0;
-                for (size_t k = 0; k < numInputs; k++)
-                    sum += weights.get(j, k) * in.get(i, k);
-                sum += weights.get(j, numInputs) * -1; // input bias
-                activation[j] = sum > 0 ? 1 : 0;
-            }
-            // update weights
-            for (size_t j = 0; j < numOutputs; j++) {
-                for (size_t k = 0; k < numInputs + 1; k++) {
-                    double oldWeight = weights.get(j, k);
-                    double newWeight = oldWeight
-                            + ETA * (out.get(i, j) - activation[j])
-                                    * in.get(i, k);
-                    diff += oldWeight - newWeight;
-                    weights.set(j, k, newWeight);
-                }
-            }
-
-        }
-        cout << "Iteration: " << iter << "\tdiff: " << diff << endl;
-        cout << weights << endl;
-        if (diff == 0) //converged
-            break;
-    }
-    delete[] activation;
-}
 
 void tests() {
     Matrix<double> test1(4, 2);
@@ -77,7 +33,8 @@ void tests() {
     test1out.set(2, 0, 1);
     test1out.set(3, 0, 1);
 
-    SLP(test1, test1out);
+    Perceptron p;
+
 }
 
 int main(int argc, char** args) {
