@@ -8,30 +8,32 @@
 
 #ifndef DATAUTILS_HPP_
 #define DATAUTILS_HPP_
-#include "OptMLP.hpp"
+
 #include <iostream>
+#include <stdlib.h>
+#include <time.h>
 
 template<class T = double>
 class Matrix {
 protected:
-	T *dat;
+    T *dat;
 public:
-	const std::size_t rows;
-	const std::size_t cols;
+    const std::size_t rows;
+    const std::size_t cols;
 
-	explicit Matrix(const std::size_t rows, const std::size_t cols);
-	explicit Matrix(const Matrix<T> &m);
-	~Matrix();
-	void printRow(std::size_t row);
-	T* getRow(std::size_t row);
-	T& get(const std::size_t row, const std::size_t col);
-	void set(const std::size_t row, const std::size_t col, const T &val);
-	void randomize_rows();
-	void randomize();
-	void randomize(double normalize);
+    explicit Matrix(const std::size_t rows, const std::size_t cols);
+    explicit Matrix(const Matrix<T> &m);
+    ~Matrix();
+    void printRow(std::size_t row);
+    T* getRow(std::size_t row);
+    T& get(const std::size_t row, const std::size_t col);
+    void set(const std::size_t row, const std::size_t col, const T &val);
+    void randomize_rows();
+    void randomize();
+    void randomize(double normalize);
 
-	template<class K>
-	friend std::ostream& operator<<(std::ostream& cout, const Matrix<K>& m);
+    template<class K>
+    friend std::ostream& operator<<(std::ostream& cout, const Matrix<K>& m);
 };
 
 #endif /* DATAUTILS_HPP_ */

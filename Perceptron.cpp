@@ -7,10 +7,14 @@
 //============================================================================
 
 #include "OptMLP.hpp"
-#include "DataUtils.hpp"
 #include "NeuralNetwork.hpp"
 
 using namespace std;
+
+Perceptron::~Perceptron() {
+    if (weights == NULL)
+        delete weights;
+}
 
 void Perceptron::train(Matrix<> &inputs, Matrix<> &outputs) {
     size_t numInputs = inputs.cols; // length of input vector
@@ -63,5 +67,4 @@ void Perceptron::train(Matrix<> &inputs, Matrix<> &outputs) {
 
     delete[] activation;
 }
-
 

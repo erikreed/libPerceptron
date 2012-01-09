@@ -10,7 +10,6 @@
 #define NEURALNETWORK_HPP_
 
 #include "DataUtils.hpp"
-#include "OptMLP.hpp"
 
 class NeuralNetwork {
 public:
@@ -25,21 +24,20 @@ public:
 };
 
 // single layer perceptron with threshold activation function
-class Perceptron  {
+class Perceptron {
     Matrix<> *weights;
 
 public:
 
     void train(Matrix<> &inputs, Matrix<> &outputs);
 
-    ~Perceptron() {
-        if (weights == NULL)
-            delete weights;
-    }
+    ~Perceptron();
 
 };
 
-class MLPerceptron : NeuralNetwork {};
-class RFPerceptron : NeuralNetwork {};
+class MLPerceptron: NeuralNetwork {
+};
+class RBFPerceptron: NeuralNetwork {
+};
 
 #endif /* NEURALNETWORK_HPP_ */
