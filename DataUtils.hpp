@@ -33,7 +33,7 @@ public:
     void randomize(double normalize);
 
     template<class K>
-    friend std::ostream& operator<<(std::ostream& cout, const Matrix<K>& m);
+    friend std::ostream& operator<<(std::ostream& cout, Matrix<K> const &m);
 };
 
 #endif /* DATAUTILS_HPP_ */

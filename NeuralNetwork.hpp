@@ -30,7 +30,7 @@ class Perceptron : NeuralNetwork {
 public:
 
     void train(Matrix<> &inputs, Matrix<> &outputs);
-
+    void test(Matrix<> &inputs, Matrix<> &outputs);
     ~Perceptron();
 
 };

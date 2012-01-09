@@ -76,7 +76,7 @@ Matrix<T>::~Matrix() {
 }
 
 template<class K>
-std::ostream& operator<<(std::ostream &cout, Matrix<K> &m) {
+std::ostream& operator<<(std::ostream &cout, Matrix<K> const &m) {
     for (size_t i = 0; i < m.rows * m.cols; i++) {
         if (i % m.cols == 0 && i != 0)
             cout << std::endl;
@@ -88,7 +88,9 @@ std::ostream& operator<<(std::ostream &cout, Matrix<K> &m) {
 
 // allows compiler to link successfully
 // http://www.parashift.com/c++-faq-lite/templates.html#faq-35.15
-template class Matrix<double> ;
-template class Matrix<float> ;
-template class Matrix<int> ;
-
+template std::ostream& operator<<(std::ostream &cout, Matrix<double> const &m);
+template std::ostream& operator<<(std::ostream &cout, Matrix<float> const &m);
+template std::ostream& operator<<(std::ostream &cout, Matrix<int> const &m);
+template class Matrix<double>;
+template class Matrix<float>;
+template class Matrix<int>;

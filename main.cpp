@@ -31,7 +31,9 @@ void tests() {
     test1out.set(3, 0, 1);
 
     Perceptron p;
-
+    // training data = testing data
+    p.train(test1, test1out);
+    p.test(test1,test1out);
 }
 
 int main(int argc, char** args) {

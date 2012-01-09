@@ -24,6 +24,8 @@ void Perceptron::test(Matrix<> &inputs, Matrix<> &outputs) {
 
     char *activation = new char[numOutputs];
 
+    size_t testsCorrect = 0;
+
     for (size_t i = 0; i < numVectors; i++) {
         // randomize input order
         // NOTE: make sure there are somewhat equal numbers of classes,
@@ -90,7 +92,7 @@ void Perceptron::train(Matrix<> &inputs, Matrix<> &outputs) {
                 }
             }
         }
-        cout << weights << endl;
+        cout << *weights << endl;
         if (diff == 0) //converged
             break;
     }
