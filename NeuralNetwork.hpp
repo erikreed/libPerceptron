@@ -9,14 +9,15 @@
 #ifndef NEURALNETWORK_HPP_
 #define NEURALNETWORK_HPP_
 
+#include "DataUtils.hpp"
 #include "OptMLP.hpp"
 
 class NeuralNetwork {
 public:
     virtual void train(Matrix<> &inputs, Matrix<> &outputs) = 0;
-    virtual void evaluate(Matrix<> &inputs) = 0;
-    virtual void verify(Matrix<> &inputs, Matrix<> &outputs) = 0;
-    virtual void test(Matrix<> &inputs, Matrix<> &outputs) = 0;
+    //virtual void evaluate(Matrix<> &inputs) = 0;
+    //virtual void verify(Matrix<> &inputs, Matrix<> &outputs) = 0;
+    //virtual void test(Matrix<> &inputs, Matrix<> &outputs) = 0;
 
     virtual Matrix<> readDataFromFile(char* path);
     virtual ~NeuralNetwork() = 0;
@@ -24,7 +25,7 @@ public:
 };
 
 // single layer perceptron with threshold activation function
-class Perceptron : NeuralNetwork {
+class Perceptron  {
     Matrix<> *weights;
 
 public:

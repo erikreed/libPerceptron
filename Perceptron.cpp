@@ -7,6 +7,7 @@
 //============================================================================
 
 #include "OptMLP.hpp"
+#include "DataUtils.hpp"
 #include "NeuralNetwork.hpp"
 
 using namespace std;

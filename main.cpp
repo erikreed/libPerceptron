@@ -7,10 +7,8 @@
 //============================================================================
 
 #include "OptMLP.hpp"
-#include "NeuralNetwork.hpp"
-
+#include "DataUtils.hpp"
 using namespace std;
-
 
 void tests() {
     Matrix<double> test1(4, 2);

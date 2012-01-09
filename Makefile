@@ -7,7 +7,7 @@ all: opt-mlp
 opt-mlp: main.o
 	$(CC) -o $@ $^ $(LDFLAGS)
 
-opt-mlp.o: OptMLP.hpp NeuralNetwork.hpp Perceptron.cpp main.cpp
+opt-mlp.o: OptMLP.hpp NeuralNetwork.hpp DataUtils.hpp DataUtils.cpp Perceptron.cpp main.cpp
 	$(CC) -c $(CFLAGS) $<
 
 .PHONY: clean run memcheck
