@@ -1,14 +1,24 @@
+#============================================================================
+# Name        : Opt-MLP-lib
+# Author      : Erik Reed
+# Description : Implementation of an optimized, multithreaded, 
+#               single and multi-layer perceptron library in C++. 
+#               Fast neural network.
+#============================================================================
+
 CC      = g++
 CFLAGS  = -Wall -g
 LDFLAGS = 
+OBJECTS = main.o Perceptron.o DataUtils.o
 
 all: opt-mlp
 
-opt-mlp: main.o
-	$(CC) -o $@ $^ $(LDFLAGS)
+opt-mlp: $(OBJECTS)
+	$(CC) ${CFLAGS} -o $@ $^ $(LDFLAGS)
 
-opt-mlp.o: DataUtils.cpp Perceptron.cpp main.cpp
-	$(CC) -c $(CFLAGS) $<
+
+%.o: %.cpp
+	${CC} ${CFLAGS} -c $< -o $@
 
 .PHONY: clean run memcheck
 run: all
