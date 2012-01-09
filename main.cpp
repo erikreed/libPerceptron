@@ -8,7 +8,6 @@
 
 #include "OptMLP.hpp"
 #include "NeuralNetwork.hpp"
-#include "Perceptron.cpp"
 
 using namespace std;
 

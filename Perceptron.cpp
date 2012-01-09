@@ -11,21 +11,6 @@
 
 using namespace std;
 
-// single layer perceptron with threshold activation function
-class Perceptron : NeuralNetwork {
-    Matrix<> *weights;
-
-public:
-
-    void train(Matrix<> &inputs, Matrix<> &outputs);
-
-    ~Perceptron() {
-        if (weights == NULL)
-            delete weights;
-    }
-
-};
-
 void Perceptron::train(Matrix<> &inputs, Matrix<> &outputs) {
     size_t numInputs = inputs.cols; // length of input vector
     size_t numVectors = inputs.rows; // i.e. numTargets
