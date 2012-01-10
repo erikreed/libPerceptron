@@ -95,7 +95,6 @@ std::ostream& operator<<(std::ostream &cout, Matrix<K> const &m) {
 }
 
 // allows compiler to link successfully
-// http://www.parashift.com/c++-faq-lite/templates.html#faq-35.15
 template std::ostream& operator<<(std::ostream &cout, Matrix<double> const &m);
 template std::ostream& operator<<(std::ostream &cout, Matrix<float> const &m);
 template std::ostream& operator<<(std::ostream &cout, Matrix<int> const &m);

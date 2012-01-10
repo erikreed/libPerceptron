@@ -66,8 +66,10 @@ Perceptron::~Perceptron() {
     if (weights == NULL)
         delete weights;
 }
-
 void Perceptron::train(Matrix<> &inputs, Matrix<> &outputs) {
+    Perceptron::train(inputs, outputs, true);
+}
+void Perceptron::train(Matrix<> &inputs, Matrix<> &outputs, bool randomize_rows) {
 
     size_t numInputs = inputs.cols; // length of input vector
     size_t numVectors = inputs.rows; // i.e. numTargets
@@ -92,10 +94,10 @@ void Perceptron::train(Matrix<> &inputs, Matrix<> &outputs) {
     for (size_t iter = 0; iter < MAX_ITERATIONS; iter++) {
         double diff = 0;
         for (size_t i = 0; i < numVectors; i++) {
-            // randomize input order
             // NOTE: make sure there are somewhat equal numbers of classes,
             //       otherwise the network will be overly biased
-            inputs.randomize_rows();
+            if (randomize_rows)
+                inputs.randomize_rows();
             // compute activations
             for (size_t j = 0; j < numOutputs; j++) {
                 double sum = 0;

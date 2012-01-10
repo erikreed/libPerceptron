@@ -30,6 +30,7 @@ class Perceptron : NeuralNetwork {
 public:
 
     void train(Matrix<> &inputs, Matrix<> &outputs);
+    void train(Matrix<> &inputs, Matrix<> &outputs, bool randomize_rows);
     void test(Matrix<> &inputs, Matrix<> &outputs);
     ~Perceptron();
     Perceptron();
