@@ -9,7 +9,7 @@
 #ifndef NEURALNETWORK_HPP_
 #define NEURALNETWORK_HPP_
 
-#include "DataUtils.hpp"
+#include "OptMLP.hpp"
 
 class NeuralNetwork {
 public:
@@ -32,7 +32,7 @@ public:
     void train(Matrix<> &inputs, Matrix<> &outputs);
     void test(Matrix<> &inputs, Matrix<> &outputs);
     ~Perceptron();
-
+    Perceptron();
 };
 
 class MLPerceptron: NeuralNetwork {

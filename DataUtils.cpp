@@ -7,6 +7,7 @@
 //============================================================================
 
 #include "DataUtils.hpp"
+#include <sstream>
 
 using namespace std;
 
@@ -28,7 +29,15 @@ void Matrix<T>::printRow(size_t row) {
     T* rowData = getRow(row);
     for (size_t i = 0; i < rows; i++)
         std::cout << rowData[i] << " ";
-    std::cout << std::endl;
+}
+
+template<class T>
+string Matrix<T>::sPrintRow(size_t row) {
+    T* rowData = getRow(row);
+    std::stringstream ss;
+    for (size_t i = 0; i < rows; i++)
+        ss << rowData[i] << " ";
+    return ss.str();
 }
 
 template<class T>
@@ -82,7 +91,6 @@ std::ostream& operator<<(std::ostream &cout, Matrix<K> const &m) {
             cout << std::endl;
         cout << m.dat[i] << " ";
     }
-    cout << std::endl;
     return cout;
 }
 

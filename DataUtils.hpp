@@ -25,6 +25,7 @@ public:
     explicit Matrix(const Matrix<T> &m);
     ~Matrix();
     void printRow(std::size_t row);
+    std::string sPrintRow(size_t row);
     T* getRow(std::size_t row);
     T& get(const std::size_t row, const std::size_t col);
     void set(const std::size_t row, const std::size_t col, const T &val);

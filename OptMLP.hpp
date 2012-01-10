@@ -9,6 +9,15 @@
 #ifndef OPTMLP_HPP_
 #define OPTMLP_HPP_
 
+// comment out to disable excessive debugging message
+#define DEBUG
+
+#ifdef DEBUG
+#define DEBUG_MSG(str) do { std::cout << str << std::endl; } while( false )
+#else
+#define DEBUG_MSG(str) do { } while ( false )
+#endif
+
 #include "DataUtils.hpp"
 #include "NeuralNetwork.hpp"
 
