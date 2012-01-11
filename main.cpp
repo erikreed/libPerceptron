@@ -7,14 +7,12 @@
 //============================================================================
 
 #include "OptMLP.hpp"
-#include "DataUtils.hpp"
+
 using namespace std;
 
-void tests() {
+void testOR() {
     DataSet<double> test1(2);
     DataSet<double> test1out(1);
-    // OR input
-    // TODO: more optimal setting
     double test1new[] = {
             0,0,
             1,0,
@@ -27,13 +25,13 @@ void tests() {
 
     Perceptron p;
     // training data = testing data
-    p.train(test1, test1out);
+    p.train(test1, test1out, true);
     p.test(test1,test1out);
 }
 
 int main(int argc, char** args) {
 
-    tests();
+    testOR();
     return 0;
 }
 

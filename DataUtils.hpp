@@ -11,7 +11,6 @@
 
 #include <iostream>
 #include <stdlib.h>
-#include <time.h>
 #include <vector>
 
 template<class T = double>
@@ -36,8 +35,8 @@ public:
     T& get(const std::size_t row, const std::size_t col);
     void set(const std::size_t row, const std::size_t col, const T &val);
     void randomize_rows();
-    void randomize();
     void randomize(double normalize);
+    static void randomize_rows(DataSet<T> &m1, DataSet<T> &m2);
     template<class K> friend std::ostream & operator <<(std::ostream & cout, const DataSet<K> &m);
 };
 

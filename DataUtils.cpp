@@ -9,6 +9,7 @@
 #include "DataUtils.hpp"
 #include <sstream>
 #include <vector>
+#include <time.h>
 
 using namespace std;
 
@@ -49,7 +50,7 @@ void DataSet<T>::addRows(std::vector<T> row) {
         throw "Row length != cols";
     for (size_t i = 0; i < row.size(); i++)
         dat.push_back(row[i]);
-    rows += row.size()/cols;
+    rows += row.size() / cols;
 }
 
 template<class T>
@@ -61,7 +62,7 @@ void DataSet<T>::addRow(T* row) {
 
 template<class T>
 void DataSet<T>::addRows(T* row, size_t num) {
-    for (size_t i = 0; i < cols*num; i++)
+    for (size_t i = 0; i < cols * num; i++)
         dat.push_back(row[i]);
     rows += num;
 }
@@ -83,6 +84,7 @@ inline T& DataSet<T>::get(const size_t row, const size_t col) {
 
 template<class T>
 void DataSet<T>::randomize_rows() {
+    srand(time(NULL));
     for (size_t i = 0; i < rows; i++) {
         size_t row = (rand() / (double) RAND_MAX) * rows;
         if (i != row) {
@@ -93,12 +95,24 @@ void DataSet<T>::randomize_rows() {
 }
 
 template<class T>
-void DataSet<T>::randomize() {
-    randomize(1);
+void DataSet<T>::randomize_rows(DataSet<T> &m1, DataSet<T> &m2) {
+    if (m1.rows != m2.rows)
+        throw "rows(m1) != rows(m2)";
+    srand(time(NULL));
+    for (size_t i = 0; i < m1.rows; i++) {
+        size_t row = (rand() / (double) RAND_MAX) * m1.rows;
+        if (i != row) {
+            for (size_t j = 0; j < m1.cols; j++)
+                std::swap(m1.get(i, j), m1.get(row, j));
+            for (size_t j = 0; j < m2.cols; j++)
+                std::swap(m2.get(i, j), m2.get(row, j));
+
+        }
+    }
 }
 
 template<class T>
-void DataSet<T>::randomize(double normalize) {
+void DataSet<T>::randomize(double normalize = 1) {
     srand(time(NULL));
     for (size_t i = 0; i < rows * cols; i++) {
         dat[i] = (rand() / (double) RAND_MAX - .5) * 2.0 / normalize;
@@ -119,10 +133,12 @@ std::ostream& operator<<(std::ostream &cout, DataSet<K> const &m) {
     return cout;
 }
 
-// allows compiler to link successfully
+// allows compiler to link successfully for common primitive data types
 template std::ostream& operator<<(std::ostream &cout, DataSet<double> const &m);
 template std::ostream& operator<<(std::ostream &cout, DataSet<float> const &m);
 template std::ostream& operator<<(std::ostream &cout, DataSet<int> const &m);
+template std::ostream& operator<<(std::ostream &cout, DataSet<char> const &m);
 template class DataSet<double> ;
 template class DataSet<float> ;
 template class DataSet<int> ;
+template class DataSet<char> ;
