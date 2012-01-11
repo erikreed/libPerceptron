@@ -11,24 +11,19 @@
 using namespace std;
 
 void tests() {
-    Matrix<double> test1(4, 2);
-    Matrix<double> test1out(4, 1);
-
+    DataSet<double> test1(2);
+    DataSet<double> test1out(1);
     // OR input
     // TODO: more optimal setting
-    test1.set(0, 0, 0);
-    test1.set(0, 1, 0);
-    test1.set(1, 0, 1);
-    test1.set(1, 1, 0);
-    test1.set(2, 0, 0);
-    test1.set(2, 1, 1);
-    test1.set(3, 0, 1);
-    test1.set(3, 1, 1);
-
-    test1out.set(0, 0, 0);
-    test1out.set(1, 0, 1);
-    test1out.set(2, 0, 1);
-    test1out.set(3, 0, 1);
+    double test1new[] = {
+            0,0,
+            1,0,
+            0,1,
+            1,1
+    };
+    double test2new[] = {0,1,1,1};
+    test1.addRows(test1new,4);
+    test1out.addRows(test2new,4);
 
     Perceptron p;
     // training data = testing data

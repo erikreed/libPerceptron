@@ -10,7 +10,7 @@
 
 using namespace std;
 
-void Perceptron::test(Matrix<> &inputs, Matrix<> &outputs) {
+void Perceptron::test(DataSet<> &inputs, DataSet<> &outputs) {
     size_t numInputs = inputs.cols; // length of input vector
     size_t numVectors = inputs.rows; // i.e. numTargets
     size_t numOutputs = outputs.cols; // i.e. length of target vector
@@ -66,10 +66,10 @@ Perceptron::~Perceptron() {
     if (weights == NULL)
         delete weights;
 }
-void Perceptron::train(Matrix<> &inputs, Matrix<> &outputs) {
+void Perceptron::train(DataSet<> &inputs, DataSet<> &outputs) {
     Perceptron::train(inputs, outputs, true);
 }
-void Perceptron::train(Matrix<> &inputs, Matrix<> &outputs, bool randomize_rows) {
+void Perceptron::train(DataSet<> &inputs, DataSet<> &outputs, bool randomize_rows) {
 
     size_t numInputs = inputs.cols; // length of input vector
     size_t numVectors = inputs.rows; // i.e. numTargets
@@ -87,7 +87,7 @@ void Perceptron::train(Matrix<> &inputs, Matrix<> &outputs, bool randomize_rows)
         delete weights;
     }
     // num neurons by num weights (+1 for input bias)
-    weights = new Matrix<>(numOutputs, numInputs + 1);
+    weights = new DataSet<>(numOutputs, numInputs + 1);
     weights->randomize(10);
 
     char *activation = new char[numOutputs];

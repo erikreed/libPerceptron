@@ -13,10 +13,10 @@
 
 class NeuralNetwork {
 public:
-    virtual void train(Matrix<> &inputs, Matrix<> &outputs) = 0;
+    virtual void train(DataSet<> &inputs, DataSet<> &outputs) = 0;
     //virtual void evaluate(Matrix<> &inputs) = 0;
     //virtual void verify(Matrix<> &inputs, Matrix<> &outputs) = 0;
-    virtual void test(Matrix<> &inputs, Matrix<> &outputs) = 0;
+    virtual void test(DataSet<> &inputs, DataSet<> &outputs) = 0;
 
     //virtual Matrix<> readDataFromFile(char* path);
     virtual ~NeuralNetwork() {};
@@ -25,13 +25,13 @@ public:
 
 // single layer perceptron with threshold activation function
 class Perceptron : NeuralNetwork {
-    Matrix<> *weights;
+    DataSet<> *weights;
 
 public:
 
-    void train(Matrix<> &inputs, Matrix<> &outputs);
-    void train(Matrix<> &inputs, Matrix<> &outputs, bool randomize_rows);
-    void test(Matrix<> &inputs, Matrix<> &outputs);
+    void train(DataSet<> &inputs, DataSet<> &outputs);
+    void train(DataSet<> &inputs, DataSet<> &outputs, bool randomize_rows);
+    void test(DataSet<> &inputs, DataSet<> &outputs);
     ~Perceptron();
     Perceptron();
 };
