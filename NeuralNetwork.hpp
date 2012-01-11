@@ -11,6 +11,10 @@
 
 #include "DataUtils.hpp"
 
+// typical 0.1 < ETA < 0.4
+const double ETA = .2; // weight coefficient
+const size_t MAX_ITERATIONS = 15;
+
 class NeuralNetwork {
 public:
     virtual void train(DataSet<> &inputs, DataSet<> &outputs) = 0;

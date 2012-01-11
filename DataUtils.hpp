@@ -31,6 +31,7 @@ public:
     void addRows(std::vector<T> row);
     void addRows(T* row,size_t num);
     void addRow(T* row);
+    template<class K> bool equals(DataSet<K> &other); //TODO: override == operator
     T* getRow(std::size_t row);
     T& get(const std::size_t row, const std::size_t col);
     void set(const std::size_t row, const std::size_t col, const T &val);

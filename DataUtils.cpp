@@ -133,11 +133,29 @@ std::ostream& operator<<(std::ostream &cout, DataSet<K> const &m) {
     return cout;
 }
 
+template<class T>
+template<class K> // be wary of implicit casts
+bool DataSet<T>::equals(DataSet<K> &other) {
+    if (other.rows != rows || other.cols != cols)
+        return false;
+    for (size_t i = 0; i < rows; i++) {
+        for (size_t j = 0; j < cols; j++) {
+        if (get(i,j) != other.get(i,j))
+            return false;
+        }
+    }
+    return true;
+}
+
 // allows compiler to link successfully for common primitive data types
 template std::ostream& operator<<(std::ostream &cout, DataSet<double> const &m);
 template std::ostream& operator<<(std::ostream &cout, DataSet<float> const &m);
 template std::ostream& operator<<(std::ostream &cout, DataSet<int> const &m);
 template std::ostream& operator<<(std::ostream &cout, DataSet<char> const &m);
+// allows casting between char/double
+// for equals comparison (discrete classifications)
+template bool DataSet<char>::equals(DataSet<double> &other);
+template bool DataSet<double>::equals(DataSet<char> &other);
 template class DataSet<double> ;
 template class DataSet<float> ;
 template class DataSet<int> ;
