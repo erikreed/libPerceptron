@@ -9,7 +9,7 @@
 #ifndef OPTMLP_HPP_
 #define OPTMLP_HPP_
 
-#include "DataUtils.hpp"
+#include "DataSet.hpp"
 #include "NeuralNetwork.hpp"
 
 #endif /* OPTMLP_HPP_ */

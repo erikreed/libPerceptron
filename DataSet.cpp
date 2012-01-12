@@ -6,7 +6,7 @@
 //               Fast neural network.
 //============================================================================
 
-#include "DataUtils.hpp"
+#include "DataSet.hpp"
 #include <sstream>
 #include <vector>
 #include <time.h>

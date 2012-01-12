@@ -9,7 +9,7 @@
 CC      = g++
 CFLAGS  = -Wall -g
 LDFLAGS = 
-OBJECTS = main.o Perceptron.o DataUtils.o MLPerceptron.o
+OBJECTS = main.o Perceptron.o DataSet.o MLPerceptron.o
 
 all: opt-mlp
 

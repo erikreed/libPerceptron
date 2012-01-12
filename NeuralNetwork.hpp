@@ -9,7 +9,7 @@
 #ifndef NEURALNETWORK_HPP_
 #define NEURALNETWORK_HPP_
 
-#include "DataUtils.hpp"
+#include "DataSet.hpp"
 
 class NeuralNetwork {
 public:
