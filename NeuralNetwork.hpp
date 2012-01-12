@@ -11,10 +11,6 @@
 
 #include "DataUtils.hpp"
 
-// typical 0.1 < ETA < 0.4
-const double ETA = .2; // weight coefficient
-const size_t MAX_ITERATIONS = 15;
-
 class NeuralNetwork {
 public:
     virtual void train(DataSet<> &inputs, DataSet<> &outputs) = 0;
@@ -23,17 +19,24 @@ public:
     virtual double test(DataSet<> &inputs, DataSet<> &outputs) = 0;
 
     //virtual Matrix<> readDataFromFile(char* path);
-    virtual ~NeuralNetwork() {};
+    virtual ~NeuralNetwork() {
+    }
+    ;
 
 };
 
 // single layer perceptron with threshold activation function
-class Perceptron : NeuralNetwork {
+class Perceptron: public NeuralNetwork {
     DataSet<> *weights;
-    void recall(size_t numOutputs, size_t numInputs,
-            DataSet<> &inputs, size_t i, char *activation);
+    void recall(size_t numOutputs, size_t numInputs, DataSet<> &inputs,
+            size_t i, char *activation);
 
 public:
+
+    // weight coefficient
+    // typical value: 0.1 < ETA < 0.4
+    double eta;
+    size_t max_iterations;
 
     void train(DataSet<> &inputs, DataSet<> &outputs);
     void train(DataSet<> &inputs, DataSet<> &outputs, bool randomize_rows);
@@ -43,7 +46,25 @@ public:
     Perceptron();
 };
 
-class MLPerceptron: NeuralNetwork {
+class MLPerceptron: public NeuralNetwork {
+    DataSet<> *weights;
+    void recall(size_t numOutputs, size_t numInputs, DataSet<> &inputs,
+            size_t i, char *activation);
+
+public:
+
+    // weight coefficient
+    // typical value: 0.1 < ETA < 0.4
+    double eta;
+    size_t max_iterations;
+
+    void train(DataSet<> &inputs, DataSet<> &outputs);
+    void train(DataSet<> &inputs, DataSet<> &outputs, bool randomize_rows);
+    double test(DataSet<> &inputs, DataSet<> &outputs);
+    DataSet<char>* evaluate(DataSet<> &inputs);
+    ~MLPerceptron();
+    MLPerceptron();
+    MLPerceptron(size_t numLayers);
 };
 class RBFPerceptron: NeuralNetwork {
 };

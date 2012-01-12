@@ -20,7 +20,7 @@ DataSet<char>* Perceptron::evaluate(DataSet<> &inputs) {
         recall(weights->rows, inputs.cols, inputs, i, activation);
         outputs->addRow(activation);
     }
-    delete activation;
+    delete[] activation;
     return outputs;
 }
 
@@ -66,7 +66,7 @@ double Perceptron::test(DataSet<> &inputs, DataSet<> &outputs) {
         if (correct)
             testsCorrect++;
     }
-    delete activation;
+    delete[] activation;
     double accuracy = 1.0 - ((double) (numVectors - testsCorrect)) / numVectors;
     accuracy *= 100;
     cout << "Classification Accuracy: " << testsCorrect << "/" << numVectors
@@ -74,7 +74,7 @@ double Perceptron::test(DataSet<> &inputs, DataSet<> &outputs) {
     return accuracy;
 }
 
-Perceptron::Perceptron() {
+Perceptron::Perceptron() : eta(0.2), max_iterations(25) {
     weights = NULL;
 }
 
@@ -106,11 +106,11 @@ void Perceptron::train(DataSet<> &inputs, DataSet<> &outputs,
     weights->randomize(10);
 
     char *activation = new char[targetDim];
+    if (randomize_rows)
+        DataSet<>::randomize_rows(inputs,outputs);
     size_t iter;
     for (iter = 0; iter < 15; iter++) {
         double diff = 0;
-        if (randomize_rows)
-            DataSet<>::randomize_rows(inputs,outputs);
         for (size_t i = 0; i < numVectors; i++) {
             // NOTE: make sure there are somewhat equal numbers of classes,
             //       otherwise the network will be overly biased
@@ -122,7 +122,7 @@ void Perceptron::train(DataSet<> &inputs, DataSet<> &outputs,
                 for (size_t k = 0; k < inputDim; k++) {
                     double oldWeight = weights->get(j, k);
                     double newWeight = oldWeight
-                            + ETA * (outputs.get(i, j) - activation[j])
+                            + eta * (outputs.get(i, j) - activation[j])
                                     * inputs.get(i, k);
                     diff += oldWeight - newWeight > 0 ?
                             oldWeight - newWeight : -(oldWeight - newWeight);
@@ -132,7 +132,7 @@ void Perceptron::train(DataSet<> &inputs, DataSet<> &outputs,
                 // bias term
                 double oldWeight = weights->get(j, inputDim);
                 double newWeight = oldWeight
-                        + ETA * (outputs.get(i, j) - activation[j]) * -1;
+                        + eta * (outputs.get(i, j) - activation[j]) * -1;
                 diff += oldWeight - newWeight > 0 ?
                         oldWeight - newWeight : -(oldWeight - newWeight);
                 weights->set(j, inputDim, newWeight);
@@ -142,7 +142,7 @@ void Perceptron::train(DataSet<> &inputs, DataSet<> &outputs,
         if (diff == 0) //converged
             break;
     }
-    if (iter != MAX_ITERATIONS)
+    if (iter != max_iterations)
         cout << "Converged in " << iter << " iterations." << endl;
     else
         cout << "Max iterations reached: " << iter << endl;
