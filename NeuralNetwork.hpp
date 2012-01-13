@@ -21,8 +21,6 @@ public:
     //virtual Matrix<> readDataFromFile(char* path);
     virtual ~NeuralNetwork() {
     }
-    ;
-
 };
 
 // single layer perceptron with threshold activation function
@@ -47,26 +45,33 @@ public:
 };
 
 class MLPerceptron: public NeuralNetwork {
-    DataSet<> *weights;
+    DataSet<> **weights;
+    void recallLayer(size_t outputDim, size_t inputDim,
+            double *inputs, double *activation, DataSet<> *weight);
     void recall(size_t numOutputs, size_t numInputs, DataSet<> &inputs,
-            size_t i, char *activation);
-
+            size_t i, DataSet<double> &activation);
+    void clean();
 public:
 
     // weight coefficient
     // typical value: 0.1 < ETA < 0.4
     double eta;
     size_t max_iterations;
+    const size_t numHiddenLayers;
+    double beta;
 
     void train(DataSet<> &inputs, DataSet<> &outputs);
-    void train(DataSet<> &inputs, DataSet<> &outputs, bool randomize_rows);
+    void train(DataSet<> &inputs, DataSet<> &outputs,
+            bool randomize_rows);
     double test(DataSet<> &inputs, DataSet<> &outputs);
     DataSet<char>* evaluate(DataSet<> &inputs);
     ~MLPerceptron();
     MLPerceptron();
-    MLPerceptron(size_t numLayers);
+    MLPerceptron(size_t numHiddenLayers);
 };
+
 class RBFPerceptron: NeuralNetwork {
+
 };
 
 #endif /* NEURALNETWORK_HPP_ */

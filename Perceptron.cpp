@@ -106,10 +106,11 @@ void Perceptron::train(DataSet<> &inputs, DataSet<> &outputs,
     weights->randomize(10);
 
     char *activation = new char[targetDim];
-    if (randomize_rows)
-        DataSet<>::randomize_rows(inputs,outputs);
+
     size_t iter;
     for (iter = 0; iter < 15; iter++) {
+        if (randomize_rows)
+                DataSet<>::randomize_rows(inputs,outputs);
         double diff = 0;
         for (size_t i = 0; i < numVectors; i++) {
             // NOTE: make sure there are somewhat equal numbers of classes,
