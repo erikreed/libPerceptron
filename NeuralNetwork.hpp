@@ -59,6 +59,7 @@ public:
     size_t max_iterations;
     const size_t numHiddenLayers;
     double beta;
+    double tol;
 
     void train(DataSet<> &inputs, DataSet<> &outputs);
     void train(DataSet<> &inputs, DataSet<> &outputs,

@@ -16,10 +16,19 @@ const double INIT_ETA = 0.2;
 const size_t INIT_MAX_ITER = 25;
 const size_t INIT_NUM_HIDDEN = 1;
 const double INIT_BETA = 1;
+const double INIT_TOL = 1e-6;
 
-MLPerceptron::MLPerceptron(size_t numHiddenLayers = INIT_NUM_HIDDEN) :
+MLPerceptron::MLPerceptron() :
         eta(INIT_ETA), max_iterations(INIT_MAX_ITER), numHiddenLayers(
-                numHiddenLayers), beta(INIT_BETA) {
+                INIT_NUM_HIDDEN), beta(INIT_BETA), tol(INIT_TOL) {
+    if (numHiddenLayers < 1)
+        throw "Invalid number of MLP hidden layers";
+    weights = NULL;
+}
+
+MLPerceptron::MLPerceptron(size_t numHiddenLayers) :
+        eta(INIT_ETA), max_iterations(INIT_MAX_ITER), numHiddenLayers(
+                numHiddenLayers), beta(INIT_BETA), tol(INIT_TOL) {
     if (numHiddenLayers < 1)
         throw "Invalid number of MLP hidden layers";
     weights = NULL;
@@ -46,7 +55,7 @@ void MLPerceptron::recall(size_t outputDim, size_t inputDim, DataSet<> &inputs,
             activation.getRow(0), weights[0]);
     // rest of hidden layers and output layer
     for (size_t i = 1; i < numHiddenLayers + 1; i++)
-        recallLayer(outputDim, outputDim, inputs.getRow(input_row),
+        recallLayer(outputDim, outputDim, activation.getRow(i - 1),
                 activation.getRow(i), weights[i]);
 }
 
@@ -98,7 +107,7 @@ double MLPerceptron::test(DataSet<> &inputs, DataSet<> &outputs) {
 //    cout << "Classification Accuracy: " << testsCorrect << "/" << numVectors
 //            << " = " << accuracy << "%" << endl;
 //    return accuracy;
-    return 5;
+    return -1;
 }
 
 void MLPerceptron::clean() {
@@ -139,10 +148,17 @@ void MLPerceptron::train(DataSet<> &inputs, DataSet<> &outputs,
         weights[i] = new DataSet<>(targetDim, targetDim + 1);
         weights[i]->randomize(NORMALIZE);
     }
-    //(targetDim, inputDim + 1);
-
-    DataSet<double> activation(targetDim, numHiddenLayers + 1);
-    DataSet<double> error(targetDim, numHiddenLayers + 1);
+    // layout = [layer][target]
+    //
+    //        ^
+    // hidden |
+    //        |
+    // layers |
+    //        |
+    // output *------------------------>
+    //           targets  -> targetDim
+    DataSet<double> activation(numHiddenLayers + 1, targetDim);
+    DataSet<double> error(numHiddenLayers + 1, targetDim);
 
     size_t iter;
 
@@ -154,32 +170,34 @@ void MLPerceptron::train(DataSet<> &inputs, DataSet<> &outputs,
             // NOTE: make sure there are somewhat equal numbers of classes,
             //       otherwise the network will be overly biased
 
-            // compute activations (forward)
+            // compute activations (forwards phase)
             recall(targetDim, inputDim, inputs, i, activation);
             // compute error in output
             for (size_t j = 0; j < targetDim; j++) {
-                double calc = activation.get(numHiddenLayers, j);
+                double calc = activation.get(0, j);
                 double actual = outputs.get(i, j);
                 double error_calc = (actual - calc) * calc * (1 - calc);
-                error.set(numHiddenLayers, j, error_calc);
+                error.set(0, j, error_calc);
             }
-            // compute error in hidden layers (backwards propagation)
-            for (size_t w = numHiddenLayers - 1; w >= 0; w++) {
-                DataSet<double> *weight = weights[i];
+            // backwards propagation -- compute error in hidden layers
+            for (size_t w = 1; w < numHiddenLayers + 1; w++) {
+                DataSet<double> *weight = weights[w];
                 for (size_t j = 0; j < targetDim; j++) {
                     double sum = 0;
-                    for (size_t k = 0; k < targetDim; k++) {
-                        sum += weight->get(j,k);
-                    }
-                    sum += weight->get(j,targetDim);
-                    double calc = activation.get(j, w);
-                    double actual = outputs.get(i, j);
-                    double error_calc = (actual - calc) * calc * (1 - calc);
-                    error.set(numHiddenLayers, j, error_calc);
+                    for (size_t k = 0; k < targetDim + 1; k++)
+                        sum += weight->get(j, k) * error.get(w - 1, j);
+                    double calc = activation.get(w, j);
+                    //double actual = outputs.get(i, j);
+                    double error_calc = calc * (1 - calc) * sum;
+                    error.set(w, j, error_calc);
                 }
             }
+            // backwards propagation -- update outer layer weights
+            //TODO
+            // backwards propagation -- update hidden layer weights
+            //TODO
         }
-        if (diff == 0) //converged
+        if (diff <= tol) //converged
             break;
     }
     if (iter != max_iterations)
