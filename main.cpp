@@ -31,7 +31,7 @@ void testOR(NeuralNetwork &NN) {
     double acc = NN.test(test1,test1out);
     if (acc != 100)
         throw "testOR training failed";
-    DataSet<char>* eval = NN.evaluate(test1);
+    DataSet<double>* eval = NN.evaluate(test1);
     if (!eval->equals(test1out))
         throw "testOR eval failed";
     delete eval;
@@ -57,7 +57,7 @@ void testAND(NeuralNetwork &NN) {
     double acc = NN.test(test1,test1out);
     if (acc != 100)
         throw "testAND training failed";
-    DataSet<char>* eval = NN.evaluate(test1);
+    DataSet<double>* eval = NN.evaluate(test1);
     if (!eval->equals(test1out))
         throw "testAND eval failed";
     delete eval;
@@ -83,7 +83,7 @@ void testXOR(NeuralNetwork &NN) {
     double acc = NN.test(test1,test1out);
     if (acc != 100)
         throw "testXOR training failed";
-    DataSet<char>* eval = NN.evaluate(test1);
+    DataSet<double>* eval = NN.evaluate(test1);
     if (!eval->equals(test1out))
         throw "testXOR eval failed";
     delete eval;

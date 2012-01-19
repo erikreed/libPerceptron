@@ -156,6 +156,7 @@ template std::ostream& operator<<(std::ostream &cout, DataSet<char> const &m);
 // for equals comparison (discrete classifications)
 template bool DataSet<char>::equals(DataSet<double> &other);
 template bool DataSet<double>::equals(DataSet<char> &other);
+template bool DataSet<double>::equals(DataSet<double> &other);
 template class DataSet<double> ;
 template class DataSet<float> ;
 template class DataSet<int> ;

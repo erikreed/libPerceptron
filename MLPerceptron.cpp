@@ -16,35 +16,34 @@ const double INIT_ETA = 0.2;
 const size_t INIT_MAX_ITER = 25;
 const size_t INIT_NUM_HIDDEN = 1;
 const double INIT_BETA = 1;
-const double INIT_TOL = 1e-6;
+const double INIT_TOL = 1e-9;
 
 MLPerceptron::MLPerceptron() :
-        eta(INIT_ETA), max_iterations(INIT_MAX_ITER), numHiddenLayers(
-                INIT_NUM_HIDDEN), beta(INIT_BETA), tol(INIT_TOL) {
+                eta(INIT_ETA), max_iterations(INIT_MAX_ITER), numHiddenLayers(
+                        INIT_NUM_HIDDEN), beta(INIT_BETA), tol(INIT_TOL) {
     if (numHiddenLayers < 1)
         throw "Invalid number of MLP hidden layers";
     weights = NULL;
 }
 
 MLPerceptron::MLPerceptron(size_t numHiddenLayers) :
-        eta(INIT_ETA), max_iterations(INIT_MAX_ITER), numHiddenLayers(
-                numHiddenLayers), beta(INIT_BETA), tol(INIT_TOL) {
+                eta(INIT_ETA), max_iterations(INIT_MAX_ITER), numHiddenLayers(
+                        numHiddenLayers), beta(INIT_BETA), tol(INIT_TOL) {
     if (numHiddenLayers < 1)
         throw "Invalid number of MLP hidden layers";
     weights = NULL;
 }
 
-// TODO: allow linear output instead of discrete (template out char)
-DataSet<char>* MLPerceptron::evaluate(DataSet<> &inputs) {
+// TODO: allow discrete output instead of linear (template out double)
+DataSet<double>* MLPerceptron::evaluate(DataSet<> &inputs) {
     // weight row dimension corresponds to output vector length
-    DataSet<char> *outputs = new DataSet<char>(5); //(weights->rows);
-//    char *activation = new char[weights->rows];
-//
-//    for (size_t i = 0; i < inputs.rows; i++) {
-//        recall(weights->rows, inputs.cols, inputs, i, activation);
-//        outputs->addRow(activation);
-//    }
-//    delete[] activation;
+    DataSet<double> *outputs = new DataSet<double>(weights[1]->rows);
+    DataSet<double> activation(numHiddenLayers + 1, weights[1]->rows);
+
+    for (size_t i = 0; i < inputs.rows; i++) {
+        recall(weights[1]->rows, inputs.cols, inputs, i, activation);
+        outputs->addRow(activation.getRow(numHiddenLayers));
+    }
     return outputs;
 }
 
@@ -73,40 +72,40 @@ void MLPerceptron::recallLayer(size_t outputDim, size_t inputDim,
 }
 
 double MLPerceptron::test(DataSet<> &inputs, DataSet<> &outputs) {
-//    size_t inputDim = inputs.cols; // length of input vector
-//    size_t numVectors = inputs.rows; // i.e. number of target vectors
-//    size_t targetDim = outputs.cols; // i.e. length of target vector
-//
-//    if (inputs.rows != outputs.rows)
-//        throw "number of test cases different between in/out: ";
-//
-//    if (weights == NULL)
-//        throw "MLPerceptron has not been trained yet.";
-//
-//    char *activation = new char[targetDim];
-//
-//    size_t testsCorrect = 0;
-//
-//    for (size_t i = 0; i < numVectors; i++) {
-//        // compute activations
-//        recall(targetDim, inputDim, inputs, i, activation);
-//        // compute accuracy
-//        bool correct = true;
-//        for (size_t j = 0; j < targetDim; j++) {
-//            if (activation[j] != outputs.get(i, j)) {
-//                correct = false;
-//                break;
-//            }
-//        }
-//        if (correct)
-//            testsCorrect++;
-//    }
-//    delete[] activation;
-//    double accuracy = 1.0 - ((double) (numVectors - testsCorrect)) / numVectors;
-//    accuracy *= 100;
-//    cout << "Classification Accuracy: " << testsCorrect << "/" << numVectors
-//            << " = " << accuracy << "%" << endl;
-//    return accuracy;
+    //    size_t inputDim = inputs.cols; // length of input vector
+    //    size_t numVectors = inputs.rows; // i.e. number of target vectors
+    //    size_t targetDim = outputs.cols; // i.e. length of target vector
+    //
+    //    if (inputs.rows != outputs.rows)
+    //        throw "number of test cases different between in/out: ";
+    //
+    //    if (weights == NULL)
+    //        throw "MLPerceptron has not been trained yet.";
+    //
+    //    char *activation = new char[targetDim];
+    //
+    //    size_t testsCorrect = 0;
+    //
+    //    for (size_t i = 0; i < numVectors; i++) {
+    //        // compute activations
+    //        recall(targetDim, inputDim, inputs, i, activation);
+    //        // compute accuracy
+    //        bool correct = true;
+    //        for (size_t j = 0; j < targetDim; j++) {
+    //            if (activation[j] != outputs.get(i, j)) {
+    //                correct = false;
+    //                break;
+    //            }
+    //        }
+    //        if (correct)
+    //            testsCorrect++;
+    //    }
+    //    delete[] activation;
+    //    double accuracy = 1.0 - ((double) (numVectors - testsCorrect)) / numVectors;
+    //    accuracy *= 100;
+    //    cout << "Classification Accuracy: " << testsCorrect << "/" << numVectors
+    //            << " = " << accuracy << "%" << endl;
+    //    return accuracy;
     return -1;
 }
 
@@ -151,11 +150,11 @@ void MLPerceptron::train(DataSet<> &inputs, DataSet<> &outputs,
     // layout = [layer][target]
     //
     //        ^
-    // hidden |
+    // output |
     //        |
     // layers |
     //        |
-    // output *------------------------>
+    // hidden *------------------------>
     //           targets  -> targetDim
     DataSet<double> activation(numHiddenLayers + 1, targetDim);
     DataSet<double> error(numHiddenLayers + 1, targetDim);
@@ -174,28 +173,58 @@ void MLPerceptron::train(DataSet<> &inputs, DataSet<> &outputs,
             recall(targetDim, inputDim, inputs, i, activation);
             // compute error in output
             for (size_t j = 0; j < targetDim; j++) {
-                double calc = activation.get(0, j);
+                double calc = activation.get(numHiddenLayers, j);
                 double actual = outputs.get(i, j);
                 double error_calc = (actual - calc) * calc * (1 - calc);
-                error.set(0, j, error_calc);
+                error.set(numHiddenLayers, j, error_calc);
             }
             // backwards propagation -- compute error in hidden layers
-            for (size_t w = 1; w < numHiddenLayers + 1; w++) {
+            for (size_t w = numHiddenLayers; w > 0; w--) {
                 DataSet<double> *weight = weights[w];
                 for (size_t j = 0; j < targetDim; j++) {
                     double sum = 0;
                     for (size_t k = 0; k < targetDim + 1; k++)
-                        sum += weight->get(j, k) * error.get(w - 1, j);
+                        sum += weight->get(j, k) * error.get(w, j);
                     double calc = activation.get(w, j);
-                    //double actual = outputs.get(i, j);
                     double error_calc = calc * (1 - calc) * sum;
                     error.set(w, j, error_calc);
                 }
             }
-            // backwards propagation -- update outer layer weights
-            //TODO
-            // backwards propagation -- update hidden layer weights
-            //TODO
+            // 0th hidden weights (inputs)
+            DataSet<double> *weight = weights[0];
+            for (size_t j = 0; j < targetDim; j++) {
+                double sum = 0;
+                for (size_t k = 0; k < inputDim + 1; k++)
+                    sum += weight->get(j, k) * error.get(0, j);
+                double calc = activation.get(0, j);
+                double error_calc = calc * (1 - calc) * sum;
+                error.set(0, j, error_calc);
+            }
+
+            // backwards propagation -- update weights
+            for (size_t w = numHiddenLayers; w > 0; w--) {
+                DataSet<double> *weight = weights[w];
+                for (size_t j = 0; j < targetDim; j++) {
+                    for (size_t k = 0; k < targetDim + 1; k++) {
+                        double oldWeight = weight->get(j,k);
+                        double newWeight = oldWeight + eta*error.get(w,j)*activation.get(w,j);
+                        weight->set(j,k,newWeight);
+                        diff += abs(oldWeight-newWeight);
+                    }
+                }
+            }
+            // inputs weight
+            for (size_t j = 0; j < targetDim; j++) {
+                DataSet<double> *weight = weights[0];
+                for (size_t j = 0; j < targetDim; j++) {
+                    for (size_t k = 0; k < inputDim + 1; k++) {
+                        double oldWeight = weight->get(j,k);
+                        double newWeight = oldWeight + eta*error.get(0,j)*activation.get(0,j);
+                        weight->set(j,k,newWeight);
+                        diff += abs(oldWeight-newWeight);
+                    }
+                }
+            }
         }
         if (diff <= tol) //converged
             break;
@@ -206,3 +235,6 @@ void MLPerceptron::train(DataSet<> &inputs, DataSet<> &outputs,
         cout << "Max iterations reached: " << iter << endl;
 }
 
+inline double round(double d) {
+  return floor(d + 0.5);
+}

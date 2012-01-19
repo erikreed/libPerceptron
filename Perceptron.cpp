@@ -11,10 +11,10 @@
 using namespace std;
 
 // TODO: allow linear output instead of discrete (template out char)
-DataSet<char>* Perceptron::evaluate(DataSet<> &inputs) {
+DataSet<double>* Perceptron::evaluate(DataSet<> &inputs) {
     // weight row dimension corresponds to output vector length
-    DataSet<char> *outputs = new DataSet<char>(weights->rows);
-    char *activation = new char[weights->rows];
+    DataSet<double> *outputs = new DataSet<double>(weights->rows);
+    double *activation = new double[weights->rows];
 
     for (size_t i = 0; i < inputs.rows; i++) {
         recall(weights->rows, inputs.cols, inputs, i, activation);
@@ -25,7 +25,7 @@ DataSet<char>* Perceptron::evaluate(DataSet<> &inputs) {
 }
 
 inline void Perceptron::recall(size_t outputDim, size_t inputDim,
-        DataSet<> &inputs, size_t input_row, char *activation) {
+        DataSet<> &inputs, size_t input_row, double *activation) {
     // compute activations
     for (size_t j = 0; j < outputDim; j++) {
         double sum = 0;
@@ -48,7 +48,7 @@ double Perceptron::test(DataSet<> &inputs, DataSet<> &outputs) {
     if (weights == NULL)
         throw "Perceptron has not been trained yet.";
 
-    char *activation = new char[targetDim];
+    double *activation = new double[targetDim];
 
     size_t testsCorrect = 0;
 
@@ -105,7 +105,7 @@ void Perceptron::train(DataSet<> &inputs, DataSet<> &outputs,
     weights = new DataSet<>(targetDim, inputDim + 1);
     weights->randomize(10);
 
-    char *activation = new char[targetDim];
+    double *activation = new double[targetDim];
 
     size_t iter;
     for (iter = 0; iter < 15; iter++) {

@@ -14,7 +14,7 @@
 class NeuralNetwork {
 public:
     virtual void train(DataSet<> &inputs, DataSet<> &outputs) = 0;
-    virtual DataSet<char>* evaluate(DataSet<> &inputs) = 0;
+    virtual DataSet<double>* evaluate(DataSet<> &inputs) = 0;
     //virtual void verify(Matrix<> &inputs, Matrix<> &outputs) = 0;
     virtual double test(DataSet<> &inputs, DataSet<> &outputs) = 0;
 
@@ -27,7 +27,7 @@ public:
 class Perceptron: public NeuralNetwork {
     DataSet<> *weights;
     void recall(size_t numOutputs, size_t numInputs, DataSet<> &inputs,
-            size_t i, char *activation);
+            size_t i, double *activation);
 
 public:
 
@@ -39,7 +39,7 @@ public:
     void train(DataSet<> &inputs, DataSet<> &outputs);
     void train(DataSet<> &inputs, DataSet<> &outputs, bool randomize_rows);
     double test(DataSet<> &inputs, DataSet<> &outputs);
-    DataSet<char>* evaluate(DataSet<> &inputs);
+    DataSet<double>* evaluate(DataSet<> &inputs);
     ~Perceptron();
     Perceptron();
 };
@@ -51,6 +51,7 @@ class MLPerceptron: public NeuralNetwork {
     void recall(size_t numOutputs, size_t numInputs, DataSet<> &inputs,
             size_t i, DataSet<double> &activation);
     void clean();
+    double round(double d);
 public:
 
     // weight coefficient
@@ -65,7 +66,7 @@ public:
     void train(DataSet<> &inputs, DataSet<> &outputs,
             bool randomize_rows);
     double test(DataSet<> &inputs, DataSet<> &outputs);
-    DataSet<char>* evaluate(DataSet<> &inputs);
+    DataSet<double>* evaluate(DataSet<> &inputs);
     ~MLPerceptron();
     MLPerceptron();
     MLPerceptron(size_t numHiddenLayers);
