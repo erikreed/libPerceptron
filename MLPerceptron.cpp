@@ -13,10 +13,10 @@ using namespace std;
 
 const int NORMALIZE = 10;
 const double INIT_ETA = 0.2;
-const size_t INIT_MAX_ITER = 25;
+const size_t INIT_MAX_ITER = 10000;
 const size_t INIT_NUM_HIDDEN = 1;
 const double INIT_BETA = 1;
-const double INIT_TOL = 1e-9;
+const double INIT_TOL = 1e-3;
 
 MLPerceptron::MLPerceptron() :
                 eta(INIT_ETA), max_iterations(INIT_MAX_ITER), numHiddenLayers(
@@ -37,6 +37,7 @@ MLPerceptron::MLPerceptron(size_t numHiddenLayers) :
 // TODO: allow discrete output instead of linear (template out double)
 DataSet<double>* MLPerceptron::evaluate(DataSet<> &inputs) {
     // weight row dimension corresponds to output vector length
+    cout << "Asd" << endl;
     DataSet<double> *outputs = new DataSet<double>(weights[1]->rows);
     DataSet<double> activation(numHiddenLayers + 1, weights[1]->rows);
 
@@ -49,13 +50,15 @@ DataSet<double>* MLPerceptron::evaluate(DataSet<> &inputs) {
 
 void MLPerceptron::recall(size_t outputDim, size_t inputDim, DataSet<> &inputs,
         size_t input_row, DataSet<double> &activation) {
+    // dim of activation = [numHiddenLayers+1][targetDim]
     // first layer
     recallLayer(outputDim, inputDim, inputs.getRow(input_row),
             activation.getRow(0), weights[0]);
     // rest of hidden layers and output layer
-    for (size_t i = 1; i < numHiddenLayers + 1; i++)
+    for (size_t i = 1; i < numHiddenLayers + 1; i++) {
         recallLayer(outputDim, outputDim, activation.getRow(i - 1),
                 activation.getRow(i), weights[i]);
+    }
 }
 
 void MLPerceptron::recallLayer(size_t outputDim, size_t inputDim,
@@ -66,8 +69,7 @@ void MLPerceptron::recallLayer(size_t outputDim, size_t inputDim,
             sum += weight->get(j, k) * inputs[k];
 
         sum += weight->get(j, inputDim) * -1; // input bias
-        //activation[j] = sum > 0 ? 1 : 0;
-        activation[j] = 1.0 / (exp(-beta * sum));
+        activation[j] = 1.0 / (1 + exp(-beta * sum));
     }
 }
 
@@ -161,16 +163,18 @@ void MLPerceptron::train(DataSet<> &inputs, DataSet<> &outputs,
 
     size_t iter;
 
-    for (iter = 0; iter < 15; iter++) {
+    for (iter = 0; iter < max_iterations; iter++) {
         if (randomize_rows)
             DataSet<>::randomize_rows(inputs, outputs);
         double diff = 0;
         for (size_t i = 0; i < numVectors; i++) {
+            //cout << i << " of " << numVectors-1 << endl;
             // NOTE: make sure there are somewhat equal numbers of classes,
             //       otherwise the network will be overly biased
 
             // compute activations (forwards phase)
             recall(targetDim, inputDim, inputs, i, activation);
+            //cout << "activation\n" << activation << "\nend activation" << endl;
             // compute error in output
             for (size_t j = 0; j < targetDim; j++) {
                 double calc = activation.get(numHiddenLayers, j);
@@ -178,8 +182,9 @@ void MLPerceptron::train(DataSet<> &inputs, DataSet<> &outputs,
                 double error_calc = (actual - calc) * calc * (1 - calc);
                 error.set(numHiddenLayers, j, error_calc);
             }
+            //cout << error << endl;
             // backwards propagation -- compute error in hidden layers
-            for (size_t w = numHiddenLayers; w > 0; w--) {
+            for (size_t w = numHiddenLayers-1; w > 0; w--) {
                 DataSet<double> *weight = weights[w];
                 for (size_t j = 0; j < targetDim; j++) {
                     double sum = 0;
@@ -190,6 +195,7 @@ void MLPerceptron::train(DataSet<> &inputs, DataSet<> &outputs,
                     error.set(w, j, error_calc);
                 }
             }
+            //cout << error << endl;
             // 0th hidden weights (inputs)
             DataSet<double> *weight = weights[0];
             for (size_t j = 0; j < targetDim; j++) {
@@ -209,7 +215,8 @@ void MLPerceptron::train(DataSet<> &inputs, DataSet<> &outputs,
                         double oldWeight = weight->get(j,k);
                         double newWeight = oldWeight + eta*error.get(w,j)*activation.get(w,j);
                         weight->set(j,k,newWeight);
-                        diff += abs(oldWeight-newWeight);
+                        diff += fabs(oldWeight-newWeight);
+                        //cout << oldWeight << " " << newWeight << endl;
                     }
                 }
             }
@@ -221,11 +228,12 @@ void MLPerceptron::train(DataSet<> &inputs, DataSet<> &outputs,
                         double oldWeight = weight->get(j,k);
                         double newWeight = oldWeight + eta*error.get(0,j)*activation.get(0,j);
                         weight->set(j,k,newWeight);
-                        diff += abs(oldWeight-newWeight);
+                        diff += fabs(oldWeight-newWeight);
                     }
                 }
             }
         }
+        //cout << "diff: " << diff << endl;
         if (diff <= tol) //converged
             break;
     }
@@ -235,6 +243,7 @@ void MLPerceptron::train(DataSet<> &inputs, DataSet<> &outputs,
         cout << "Max iterations reached: " << iter << endl;
 }
 
-inline double round(double d) {
+// TODO: maybe use for double->char for discretization
+inline double MLPerceptron::round(double d) {
   return floor(d + 0.5);
 }

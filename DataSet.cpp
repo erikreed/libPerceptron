@@ -11,16 +11,21 @@
 #include <vector>
 #include <time.h>
 
+#include <assert.h>
+//#define NDEBUG
+
 using namespace std;
 
 template<class T>
 DataSet<T>::DataSet(const size_t cols) :
         rows(0), cols(cols) {
+    assert(cols>0);
 }
 
 template<class T>
 DataSet<T>::DataSet(const size_t rows, const size_t cols) :
         dat(vector<T>(rows * cols)), rows(rows), cols(cols) {
+    assert(cols>0 && rows>=0);
 }
 
 template<class T>
@@ -30,6 +35,7 @@ DataSet<T>::DataSet(const DataSet<T> &m) :
 
 template<class T>
 void DataSet<T>::printRow(size_t row) {
+    assert(row>=0 && row < rows);
     T* rowData = getRow(row);
     for (size_t i = 0; i < rows; i++)
         std::cout << rowData[i] << " ";
@@ -37,6 +43,7 @@ void DataSet<T>::printRow(size_t row) {
 
 template<class T>
 string DataSet<T>::sPrintRow(size_t row) {
+    assert(row>=0 && row < rows);
     T* rowData = getRow(row);
     std::stringstream ss;
     for (size_t i = 0; i < rows; i++)
@@ -69,16 +76,22 @@ void DataSet<T>::addRows(T* row, size_t num) {
 
 template<class T>
 inline T* DataSet<T>::getRow(size_t row) {
-    return &dat[row * rows];
+    assert(row>=0 && row < rows);
+    return &dat[row * cols];
 }
 
 template<class T>
 inline void DataSet<T>::set(const size_t row, const size_t col, const T &val) {
+    assert(row>=0 && row < rows);
+    assert(col>=0 && col < cols);
     dat[cols * row + col] = val;
 }
 
 template<class T>
 inline T& DataSet<T>::get(const size_t row, const size_t col) {
+    assert(row>=0 && row < rows);
+    assert(col>=0 && col < cols);
+
     return dat[cols * row + col];
 }
 
