@@ -8,8 +8,13 @@
 
 #include "OptMLP.hpp"
 #include <typeinfo>
+#include "math.h"
 
 using namespace std;
+
+inline double round(double d) {
+    return floor(d + 0.5);
+}
 
 void testOR(NeuralNetwork &NN) {
     cout << typeid(NN).name() << ": testOR" << endl;
@@ -80,7 +85,7 @@ void testXOR(NeuralNetwork &NN) {
 
     // training data = testing data
     NN.train(test1, test1out);
-//    double acc = NN.test(test1,test1out);
+    double acc = NN.test(test1,test1out);
 //    if (acc != 100)
 //        throw "testXOR training failed";
 //    DataSet<double>* eval = NN.evaluate(test1);
