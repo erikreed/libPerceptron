@@ -160,11 +160,24 @@ bool DataSet<T>::equals(DataSet<K> &other) {
     return true;
 }
 
+template<class T>
+DataSet<T>& DataSet<T>::operator=(const DataSet<T> &rhs) {
+    this->dat = rhs.dat;
+    this->cols = rhs.cols;
+    this->rows = rhs.rows;
+    return *this;
+}
+
 // allows compiler to link successfully for common primitive data types
 template std::ostream& operator<<(std::ostream &cout, DataSet<double> const &m);
 template std::ostream& operator<<(std::ostream &cout, DataSet<float> const &m);
 template std::ostream& operator<<(std::ostream &cout, DataSet<int> const &m);
 template std::ostream& operator<<(std::ostream &cout, DataSet<char> const &m);
+// for = assignment
+template DataSet<double>& DataSet<double>::operator=(const DataSet<double> &rhs);
+template DataSet<float>& DataSet<float>::operator=(const DataSet<float> &rhs);
+template DataSet<int>& DataSet<int>::operator=(const DataSet<int> &rhs);
+template DataSet<char>& DataSet<char>::operator=(const DataSet<char> &rhs);
 // allows casting between char/double
 // for equals comparison (discrete classifications)
 template bool DataSet<char>::equals(DataSet<double> &other);

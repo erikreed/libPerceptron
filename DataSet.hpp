@@ -20,7 +20,7 @@ protected:
 public:
     std::size_t rows; //TODO: add getter/setter for this and dat
     // columns fixed -- no partial data allowed (yet)
-    const std::size_t cols;
+    std::size_t cols;
 
     explicit DataSet(const std::size_t cols);
     explicit DataSet(const std::size_t rows, const std::size_t cols);
@@ -39,6 +39,7 @@ public:
     void randomize(double normalize);
     static void randomize_rows(DataSet<T> &m1, DataSet<T> &m2);
     template<class K> friend std::ostream & operator <<(std::ostream & cout, const DataSet<K> &m);
+    DataSet<T>& operator=(const DataSet<T> &rhs);
 };
 
 #endif /* DATAUTILS_HPP_ */

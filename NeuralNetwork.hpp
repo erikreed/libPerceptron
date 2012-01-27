@@ -59,8 +59,9 @@ public:
     double eta;
     size_t max_iterations;
     const size_t numHiddenLayers;
-    double beta;
-    double tol;
+    double beta; // sigmoid function constant
+    double tol; // convergence tolerance
+    double alpha; //momentum constant
 
     void train(DataSet<> &inputs, DataSet<> &outputs);
     void train(DataSet<> &inputs, DataSet<> &outputs,
