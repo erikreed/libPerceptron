@@ -1,9 +1,7 @@
 //============================================================================
-// Name        : Opt-MLP-lib
+// Name        :
 // Author      : Erik Reed
-// Description : Implementation of an optimized, multithreaded,
-//               single and multi-layer MLPerceptron library in C++.
-//               Fast neural network.
+// Description :
 //============================================================================
 
 #include "NeuralNetwork.hpp"

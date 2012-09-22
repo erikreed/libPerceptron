@@ -1,9 +1,7 @@
 //============================================================================
-// Name        : Opt-MLP-lib
+// Name        :
 // Author      : Erik Reed
-// Description : Implementation of an optimized, multithreaded,
-//               single and multi-layer perceptron library in C++.
-//               Fast neural network.
+// Description :
 //============================================================================
 
 #ifndef OPTMLP_HPP_
