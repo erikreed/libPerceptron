@@ -7,7 +7,7 @@
 CC      = g++
 CFLAGS  = -Wall -g #NDEBUG
 LDFLAGS = 
-OBJECTS = testPerceptron.o Perceptron.o DataSet.o MLPerceptron.o NaiveBayes.o
+OBJECTS = main.o Perceptron.o DataSet.o MLPerceptron.o NaiveBayes.o
 
 all: main
 

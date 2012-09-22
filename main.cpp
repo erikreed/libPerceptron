@@ -99,7 +99,9 @@ void testPerceptron() {
 }
 
 int main(int argc, char** args) {
-  DataSet d('data.csv');
+  DataSet<char> d('data.csv');
+
+  cout << d << endl;
 
   return 0;
 }

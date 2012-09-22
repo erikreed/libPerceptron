@@ -25,6 +25,7 @@ template<class T>
 DataSet<T>::DataSet(const char* filename) {
   ifstream data(filename);
   int cols = -1;
+  int rows = 0;
   string line;
   while (getline(data, line)) {
     stringstream lineStream(line);
@@ -37,7 +38,10 @@ DataSet<T>::DataSet(const char* filename) {
     }
     assert(cols == -1 || cols == lineCols);
     cols = lineCols;
+    rows++;
   }
+  this->rows = rows;
+  this->cols = cols;
   data.close();
 }
 
