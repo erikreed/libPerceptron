@@ -1,11 +1,17 @@
 %% erik reed
 % kmeans-clustering
+
+% scatter(data(:,1),data(:,2), 35, [127,127,127]/255)
+% hold all
+
 clear all; 
 
-data = load('cluster3.csv');
+data = load('cluster1.csv');
 kmeansPP = true;
-k=5;
-runs = 200;
+kmax=15;
+runs = 5;
+
+for k=1:kmax
 
 [dimX, dimY] = size(data);
 runs_min = zeros(runs, 1);
@@ -14,7 +20,7 @@ runs_std = zeros(runs, 1);
 
 for run=1:runs
     clusters = zeros(k, dimY);
-    if kmeansPP
+    if kmeansPP && k ~= 1
         % K-means++ for initialization
         clusters(1,:) = data(randi(dimX,1,1), :);
         for i=2:k
@@ -27,8 +33,8 @@ for run=1:runs
                 end
                 distances(j) = minDist;
             end
-            probs = [0; cumsum(distances.^2/sum(distances.^2))];
-            nextCluster = find(probs >= rand() == 1, 1) - 1;
+            probs = [cumsum(distances/sum(distances))];
+            nextCluster = find(probs >= rand(), 1);
             clusters(i,:) = data(nextCluster, :);
         end
     else
@@ -66,8 +72,20 @@ for run=1:runs
         end
         
     end
-    runs_min(run) = min(distances);
-    runs_mean(run) = mean(distances);
-    runs_std(run) = std(distances);
+    runs_min(run) = min(distances.^2);
+    runs_mean(run) = mean(distances.^2);
+    runs_std(run) = std(distances.^2);
+%     scatter(clusters(:,1),clusters(:,2), [], [0,0,0], 'filled')
 end
-min(runs_min)
+
+%%
+subplot(3,1,1)
+scatter(1:200, runs_min)
+ylabel('min')
+subplot(3,1,2)
+scatter(1:200, runs_mean)
+ylabel('mean')
+subplot(3,1,3)
+scatter(1:200, runs_std)
+ylabel('stdev')
+xlabel('runs')
